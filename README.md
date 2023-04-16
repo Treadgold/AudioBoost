@@ -1,4 +1,4 @@
-# Up To Eleven
+# AudioBoost
 
 A Web Extension that inserts a Web Audio API `GainNode` and `DynamicsCompressor`
 node to increase the audio level of videos that are too quiet, while limiting
