@@ -21,11 +21,12 @@
     "activeTab",
     "storage"
   ],
-
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["audioboost.js"]
+      "js": ["audioboost.js"],
+      "all_frames": true
     }
   ]
+
 }
