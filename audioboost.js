@@ -5,7 +5,7 @@ function setGain(gainValue, thresholdValue, ratioValue) {
   if (!window.__ac) {
     window.__ac = new AudioContext();
   }
-  var comp = new DynamicsCompressorNode(window.__ac, { ratio: ratioValue, threshold: thresholdValue });
+  var comp = new DynamicsCompressorNode(window.__ac, { attack: 0.1 release: 0.5 ratio: ratioValue, threshold: thresholdValue });
   var gain = new GainNode(window.__ac, { gain: gainValue });
   if (!window.__source) {
     var element = document.querySelector("video");
@@ -39,8 +39,8 @@ function doit(e) {
   if (enabled) {
     browser.browserAction.setIcon({
       path: {
-        48: "icons/uptoeleven-disabled.png",
-        96: "icons/uptoeleven-disabled.png"
+        48: "icons/audioboost-disabled.png",
+        96: "icons/audioboost-disabled.png"
       }
     });
     browser.tabs.executeScript({
@@ -53,8 +53,8 @@ function doit(e) {
   } else {
     browser.browserAction.setIcon({
       path: {
-        48: "icons/uptoeleven-enabled.png",
-        96: "icons/uptoeleven-enabled.png"
+        48: "icons/audioboost-enabled.png",
+        96: "icons/audioboost-enabled.png"
       }
     });
     browser.storage.local.get(["gainValue", "thresholdValue", "ratioValue"]).then((result) => {

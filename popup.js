@@ -8,7 +8,7 @@ const thresholdValueLabel = document.getElementById("threshold-value");
 const ratioValueLabel = document.getElementById("ratio-value");
 
 // Load the stored gain value
-browser.storage.local.get(["gainValue", "thresholdValue", "ratioValue"]).then((result) => {
+browser.storage.local.get(["gainValue", "thresholdValue", "ratioValue", "enabled"]).then((result) => {
     gainSlider.value = result.gainValue || 10;
     thresholdSlider.value = result.thresholdValue || -50;
     ratioSlider.value = result.ratioValue || 10;
@@ -61,8 +61,8 @@ toggleButton.addEventListener("click", () => {
     // Update the toolbar icon
     browser.browserAction.setIcon({
         path: {
-          48: enabled ? "icons/uptoeleven-enabled.png" : "icons/uptoeleven-disabled.png",
-          96: enabled ? "icons/uptoeleven-enabled.png" : "icons/uptoeleven-disabled.png",
+          48: enabled ? "icons/audioboost-enabled.png" : "icons/audioboost-disabled.png",
+          96: enabled ? "icons/audioboost-enabled.png" : "icons/audioboost-disabled.png",
         },
       });
   
