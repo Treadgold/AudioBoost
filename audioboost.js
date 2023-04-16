@@ -1,5 +1,44 @@
 var browser = browser || chrome;
 var enabled = false;
+let analyser;
+let analyserGain;
+
+function updateVUMeters(leftValue, rightValue) {
+  browser.runtime.sendMessage({ type: "updateVUMeters", leftValue, rightValue });
+}
+
+function initAnalyser() {
+  if (!window.__ac) {
+    window.__ac = new AudioContext();
+  }
+  analyser = new AnalyserNode(window.__ac, { fftSize: 32, minDecibels: -90, maxDecibels: -10 });
+  analyserGain = new GainNode(window.__ac, { gain: 1 });
+  if (!window.__source) {
+    var element = document.querySelector("video");
+    window.__source = new MediaElementAudioSourceNode(window.__ac, { mediaElement: element });
+  }
+  window.__source.connect(analyserGain).connect(analyser);
+}
+
+function drawVUMeter() {
+  function updateMeter() {
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+    analyser.getByteFrequencyData(dataArray);
+
+    const leftValue = dataArray[0] / 255;
+    const rightValue = dataArray[1] / 255;
+
+    updateVUMeters(leftValue, rightValue);
+
+    requestAnimationFrame(updateMeter);
+  }
+
+  updateMeter();
+}
+
+initAnalyser();
+drawVUMeter();
 
 function setGain(gainValue, thresholdValue, ratioValue) {
   if (!window.__ac) {
@@ -10,24 +49,30 @@ function setGain(gainValue, thresholdValue, ratioValue) {
   if (!window.__source) {
     var element = document.querySelector("video");
     window.__source = new MediaElementAudioSourceNode(window.__ac, { mediaElement: element });
-  } else {
-    window.__source.disconnect();
   }
-  window.__source.connect(gain).connect(comp).connect(window.__ac.destination);
-  undefined;
+  return {
+    gainNode: gain,
+    compressorNode: comp
+  };
 }
 
 function setValues({ gainValue, thresholdValue, ratioValue }) {
-  setGain(gainValue, thresholdValue, ratioValue);
+  const nodes = setGain(gainValue, thresholdValue, ratioValue);
+  window.__source.disconnect();
+  window.__source.connect(nodes.gainNode).connect(nodes.compressorNode).connect(window.__ac.destination);
+  window.__source.connect(analyserGain);
 }
 
 function toggleEnabled(newEnabled, { gainValue, thresholdValue, ratioValue }) {
   if (newEnabled) {
-    setGain(gainValue, thresholdValue, ratioValue);
+    const nodes = setGain(gainValue, thresholdValue, ratioValue);
+    window.__source.disconnect();
+    window.__source.connect(nodes.gainNode).connect(nodes.compressorNode).connect(window.__ac.destination);
   } else {
     window.__source.disconnect();
     window.__source.connect(window.__ac.destination);
   }
+  window.__source.connect(analyserGain);
   enabled = newEnabled;
 }
 

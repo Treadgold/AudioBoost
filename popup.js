@@ -7,6 +7,33 @@ const gainValueLabel = document.getElementById("gain-value");
 const thresholdValueLabel = document.getElementById("threshold-value");
 const ratioValueLabel = document.getElementById("ratio-value");
 
+const leftChannelMeter = document.getElementById("left-channel-meter");
+const rightChannelMeter = document.getElementById("right-channel-meter");
+
+function drawMeter(ctx, value) {
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+  if (value < 0.7) {
+    ctx.fillStyle = "green";
+  } else if (value < 0.95) {
+    ctx.fillStyle = "orange";
+  } else {
+    ctx.fillStyle = "red";
+  }
+
+  ctx.fillRect(0, 0, ctx.canvas.width * value, ctx.canvas.height);
+}
+
+browser.runtime.onMessage.addListener((message) => {
+  if (message.type === "updateVUMeters") {
+    const leftCtx = leftChannelMeter.getContext("2d");
+    const rightCtx = rightChannelMeter.getContext("2d");
+    drawMeter(leftCtx, message.leftValue);
+    drawMeter(rightCtx, message.rightValue);
+  }
+});
+
+
 // Load the stored gain value
 browser.storage.local.get(["gainValue", "thresholdValue", "ratioValue", "enabled"]).then((result) => {
     gainSlider.value = result.gainValue || 10;
