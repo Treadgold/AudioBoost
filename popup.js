@@ -10,6 +10,14 @@ const ratioValueLabel = document.getElementById("ratio-value");
 const leftChannelMeter = document.getElementById("left-channel-meter");
 const rightChannelMeter = document.getElementById("right-channel-meter");
 
+browser.tabs.executeScript({
+  code: "typeof window.__audioboostInjected !== 'undefined'",
+}).then(([isInjected]) => {
+  if (!isInjected) {
+    browser.tabs.executeScript({ file: "audioboost.js" });
+  }
+});
+
 updateStatusIndicator(false);
 
 function drawMeter(ctx, value) {
