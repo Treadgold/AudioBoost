@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Up to Eleven Popup</title>
+    <style>
+      body {
+        width: 200px;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>Gain Value: <span id="gain-value">10</span></h3>
+    <input type="range" id="gain-slider" min="0" max="20" step="1" value="10">
+    <h3>Threshold: <span id="threshold-value">-50</span></h3>
+    <input type="range" id="threshold-slider" min="-100" max="0" step="1" value="-50">
+    <h3>Ratio: <span id="ratio-value">10</span></h3>
+    <input type="range" id="ratio-slider" min="1" max="20" step="1" value="10">
+    <h3>Enable/Disable:</h3>
+    <button id="toggle-button">Toggle</button>
+    <script src="popup.js"></script>
+  </body>
+</html>
