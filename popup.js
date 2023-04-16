@@ -10,6 +10,8 @@ const ratioValueLabel = document.getElementById("ratio-value");
 const leftChannelMeter = document.getElementById("left-channel-meter");
 const rightChannelMeter = document.getElementById("right-channel-meter");
 
+updateStatusIndicator(false);
+
 function drawMeter(ctx, value) {
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
@@ -68,6 +70,11 @@ function updateValues() {
     });
 }
 
+function updateStatusIndicator(isEnabled) {
+  const statusIndicator = document.getElementById("status-indicator");
+  statusIndicator.style.backgroundColor = isEnabled ? "green" : "red";
+}
+
 // Update the gain value on slider change
 // Update values on slider change
 gainSlider.addEventListener("input", updateValues);
@@ -76,29 +83,30 @@ ratioSlider.addEventListener("input", updateValues);
 
 // Toggle the enabled/disabled state
 toggleButton.addEventListener("click", () => {
-    browser.storage.local.get(["enabled", "gainValue", "thresholdValue", "ratioValue"]).then((result) => {
-      const enabled = !result.enabled;
-      const gainValue = result.gainValue || 10;
-      const thresholdValue = result.thresholdValue || -50;
-      const ratioValue = result.ratioValue || 10;
-  
-      toggleButton.textContent = enabled ? "Disable" : "Enable";
-      browser.storage.local.set({ enabled });
+  browser.storage.local.get(["enabled", "gainValue", "thresholdValue", "ratioValue"]).then((result) => {
+    const enabled = !result.enabled;
+    const gainValue = result.gainValue || 10;
+    const thresholdValue = result.thresholdValue || -50;
+    const ratioValue = result.ratioValue || 10;
+
+    toggleButton.textContent = enabled ? "Disable" : "Enable";
+    updateStatusIndicator(enabled); // Add this line to update the status indicator
+    browser.storage.local.set({ enabled });
 
     // Update the toolbar icon
     browser.browserAction.setIcon({
-        path: {
-          48: enabled ? "icons/audioboost-enabled.png" : "icons/audioboost-disabled.png",
-          96: enabled ? "icons/audioboost-enabled.png" : "icons/audioboost-disabled.png",
-        },
-      });
-  
-      // Update enabled state in the content script
-      browser.tabs.executeScript({
-        code: `
-          toggleEnabled(${enabled}, {gainValue: ${gainValue}, thresholdValue: ${thresholdValue}, ratioValue: ${ratioValue}});
-          undefined;
-        `,
-      });
+      path: {
+        48: enabled ? "icons/audioboost-enabled.png" : "icons/audioboost-disabled.png",
+        96: enabled ? "icons/audioboost-enabled.png" : "icons/audioboost-disabled.png",
+      },
     });
+
+    // Update enabled state in the content script
+    browser.tabs.executeScript({
+      code: `
+        toggleEnabled(${enabled}, {gainValue: ${gainValue}, thresholdValue: ${thresholdValue}, ratioValue: ${ratioValue}});
+        undefined;
+      `,
+    });
+  });
 });

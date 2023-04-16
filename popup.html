@@ -8,6 +8,13 @@
         width: 200px;
         padding: 10px;
       }
+      #status-indicator {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        margin-left: 75px;
+      }
     </style>
   </head>
   <body>
@@ -20,7 +27,8 @@
     <h3>Ratio: <span id="ratio-value">10</span></h3>
     <input type="range" id="ratio-slider" min="1" max="20" step="1" value="5">
     <h3>Enable/Disable:</h3>
-    <button id="toggle-button">Toggle</button>
+    <button id="toggle-button">Enable</button>
+    <span id="status-indicator"></span>
     <script src="popup.js"></script>
   </body>
 </html>
