@@ -18,12 +18,12 @@ that allows you to turn the extension on and off.
 
 There is a VU meter to see the audio levels.
 
-The Gain controls amount of gain applied after the compressor
-You can set this to 0
+The Gain controls amount of gain applied before the compressor
+You can set this to 1 and there will essentially be no effect.
 
 The Threshold determnines the volume levels above which the compressor will affect.
-All the way to the right and the compressor will do the least.
-All the way to the left and the compressor will do the most.
+All the way to the right and the compressor will do nothing.
+All the way to the left and the compressor will force all audio to the same volume(or try to).
 Somewhere about -20 is a good place to start.
 
 Ratio is how much the compressor "compresses" the audio. To make everything the same volume, increase the ratio above 10.
