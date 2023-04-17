@@ -1,5 +1,6 @@
 # AudioBoost
 Screenshot:
+
 <img src="https://user-images.githubusercontent.com/37170027/232359909-968baf60-5cec-4ec1-b14e-9f5a03bbae90.png" height="200" alt="Example Image">
 
 A Web Extension that inserts a Web Audio API `GainNode` and `DynamicsCompressor`
