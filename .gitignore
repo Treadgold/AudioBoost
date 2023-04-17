@@ -1,2 +1,13 @@
 /options.html
 /options.js
+icons/old/audioboost-disabled.png
+icons/old/audioboost-enabled.png
+icons/old/audioboost@2x-disabled.png
+icons/old/audioboost@2x-enabled.png
+icons/photoshop/audioboost-disabled.png
+icons/photoshop/audioboost-enabled.png
+icons/photoshop/audioboost@2x-disabled.png
+icons/photoshop/audioboost@2x-enabled.png
+icons/photoshop/layers.psd
+AudioBoost.zip
+.gitignore
