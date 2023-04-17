@@ -11,8 +11,26 @@ This is an enhanced version of https://github.com/padenot/up-to-eleven:
 the input gain for the gain section, and the threshold and ratio for the compressor
 are now controlled by sliders in a pop up window.
 
+### Features
+
 There is an enable/disable button in the pop up window
 that allows you to turn the extension on and off.
+
+There is a VU meter to see the audio levels.
+
+The Gain controls amount of gain applied after the compressor
+You can set this to 0
+
+The Threshold determnines the volume levels above which the compressor will affect.
+All the way to the right and the compressor will do the least.
+All the way to the left and the compressor will do the most.
+Somewhere about -20 is a good place to start.
+
+Ratio is how much the compressor "compresses" the audio. To make everything the same volume, increase the ratio above 10.
+For a subtle effect, set the ratio to a low setting like 2 or 3.
+
+
+### Install Instruction
 
 If you would like to run this plugin, clone the contents to a directory on your machine.
 
