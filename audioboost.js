@@ -83,22 +83,6 @@ function toggleEnabled(newEnabled, { gainValue, thresholdValue, ratioValue }) {
   enabled = newEnabled;
 }
 
-function toggleEnabled(newEnabled, { gainValue, thresholdValue, ratioValue }) {
-  if (newEnabled) {
-    const nodes = setGain(gainValue, thresholdValue, ratioValue);
-    window.__source.disconnect();
-    window.__source.connect(nodes.gainNode).connect(nodes.compressorNode).connect(window.__ac.destination);
-  } else {
-    window.__source.disconnect();
-    window.__source.connect(window.__ac.destination);
-  }
-  // Keep the analyser connected
-  window.__source.connect(analyserGain).connect(analyser);
-  enabled = newEnabled;
-}
-
-
-
 
 // Load the stored gain value
 browser.storage.local.get(["gainValue", "thresholdValue", "ratioValue", "enabled"]).then((result) => {
