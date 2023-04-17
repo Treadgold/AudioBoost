@@ -4,7 +4,7 @@ var browser = browser || chrome;
 var enabled = false;
 let analyser;
 let analyserGain;
-
+let outputAnalyser;
 
 function updateVUMeters(leftValue, rightValue) {
   browser.runtime.sendMessage({ type: "updateVUMeters", leftValue, rightValue });
@@ -15,6 +15,7 @@ function initAnalyser() {
     window.__ac = new AudioContext();
   }
   analyser = new AnalyserNode(window.__ac, { fftSize: 32, minDecibels: -90, maxDecibels: -10 });
+  outputAnalyser = new AnalyserNode(window.__ac, { fftSize: 32, minDecibels: -90, maxDecibels: -10 });
   analyserGain = new GainNode(window.__ac, { gain: 1 });
   if (!window.__source) {
     var element = document.querySelector("video");
@@ -25,9 +26,9 @@ function initAnalyser() {
 
 function drawVUMeter() {
   function updateMeter() {
-    const bufferLength = analyser.frequencyBinCount;
+    const bufferLength = outputAnalyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
-    analyser.getByteFrequencyData(dataArray);
+    outputAnalyser.getByteFrequencyData(dataArray);
 
     const leftValue = dataArray[0] / 255;
     const rightValue = dataArray[1] / 255;
@@ -41,7 +42,7 @@ function drawVUMeter() {
 }
 
 initAnalyser();
-toggleEnabled(false, { gainValue: 1, thresholdValue: -50, ratioValue: 10 });
+toggleEnabled(false, { gainValue: 7, thresholdValue: -20, ratioValue: 6 });
 drawVUMeter();
 
 function setGain(gainValue, thresholdValue, ratioValue) {
@@ -66,6 +67,7 @@ function setValues({ gainValue, thresholdValue, ratioValue }) {
   window.__source.disconnect();
   window.__source.connect(nodes.gainNode).connect(nodes.compressorNode).connect(window.__ac.destination);
   window.__source.connect(analyserGain);
+  nodes.compressorNode.connect(outputAnalyser); // Connect outputAnalyser to compressorNode
 }
 
 function toggleEnabled(newEnabled, { gainValue, thresholdValue, ratioValue }) {
@@ -73,6 +75,7 @@ function toggleEnabled(newEnabled, { gainValue, thresholdValue, ratioValue }) {
     const nodes = setGain(gainValue, thresholdValue, ratioValue);
     window.__source.disconnect();
     window.__source.connect(nodes.gainNode).connect(nodes.compressorNode).connect(window.__ac.destination);
+    nodes.compressorNode.connect(outputAnalyser); // Connect outputAnalyser to compressorNode
   } else {
     storedValues = { gainValue, thresholdValue, ratioValue };
     window.__source.disconnect();
@@ -83,15 +86,14 @@ function toggleEnabled(newEnabled, { gainValue, thresholdValue, ratioValue }) {
   enabled = newEnabled;
 }
 
-
 // Load the stored gain value
 browser.storage.local.get(["gainValue", "thresholdValue", "ratioValue", "enabled"]).then((result) => {
-  const gainValue = result.gainValue || 10;
-  const thresholdValue = result.thresholdValue || -50;
-  const ratioValue = result.ratioValue || 10;
+  const gainValue = result.gainValue || 7;
+  const thresholdValue = result.thresholdValue || -20;
+  const ratioValue = result.ratioValue || 6;
   enabled = result.enabled || false;
 
   if (enabled) {
-      setGain(gainValue, thresholdValue, ratioValue);
+    setGain(gainValue, thresholdValue, ratioValue);
   }
 });

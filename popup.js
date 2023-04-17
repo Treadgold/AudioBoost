@@ -89,9 +89,9 @@ ratioSlider.addEventListener("input", updateValues);
 
 // Load the stored gain value
 browser.storage.local.get(["gainValue", "thresholdValue", "ratioValue", "enabled"]).then((result) => {
-    gainSlider.value = result.gainValue || 10;
-    thresholdSlider.value = result.thresholdValue || -50;
-    ratioSlider.value = result.ratioValue || 10;
+    gainSlider.value = result.gainValue || 7;
+    thresholdSlider.value = result.thresholdValue || -20;
+    ratioSlider.value = result.ratioValue || 6;
     toggleButton.textContent = result.enabled ? "Disable" : "Enable";
 
     // Update value labels
@@ -137,9 +137,9 @@ ratioSlider.addEventListener("input", updateValues);
 toggleButton.addEventListener("click", () => {
   browser.storage.local.get(["enabled", "gainValue", "thresholdValue", "ratioValue"]).then((result) => {
     const enabled = !result.enabled;
-    const gainValue = result.gainValue || 10;
-    const thresholdValue = result.thresholdValue || -50;
-    const ratioValue = result.ratioValue || 10;
+    const gainValue = result.gainValue || 7;
+    const thresholdValue = result.thresholdValue || -20;
+    const ratioValue = result.ratioValue || 6;
 
     toggleButton.textContent = enabled ? "Disable" : "Enable";
     updateStatusIndicator(enabled); // Add this line to update the status indicator
