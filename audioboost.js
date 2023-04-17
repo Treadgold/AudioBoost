@@ -1,4 +1,5 @@
 window.__audioboostInjected = true;
+let storedValues = { gainValue: 1, thresholdValue: -50, ratioValue: 10 };
 var browser = browser || chrome;
 var enabled = false;
 let analyser;
@@ -49,6 +50,7 @@ function setGain(gainValue, thresholdValue, ratioValue) {
   }
   var comp = new DynamicsCompressorNode(window.__ac, { knee: 10, attack: 0.01, release: 0.15, ratio: ratioValue, threshold: thresholdValue });
   var gain = new GainNode(window.__ac, { gain: gainValue });
+  gain.gain.linearRampToValueAtTime(gainValue, window.__ac.currentTime + 0.3); // Add this line to smoothly change gain value
   if (!window.__source) {
     var element = document.querySelector("video");
     window.__source = new MediaElementAudioSourceNode(window.__ac, { mediaElement: element });
@@ -72,12 +74,15 @@ function toggleEnabled(newEnabled, { gainValue, thresholdValue, ratioValue }) {
     window.__source.disconnect();
     window.__source.connect(nodes.gainNode).connect(nodes.compressorNode).connect(window.__ac.destination);
   } else {
+    storedValues = { gainValue, thresholdValue, ratioValue };
     window.__source.disconnect();
     window.__source.connect(window.__ac.destination);
   }
-  window.__source.connect(analyserGain);
+  // Keep the analyser connected
+  window.__source.connect(analyserGain).connect(analyser);
   enabled = newEnabled;
 }
+
 function toggleEnabled(newEnabled, { gainValue, thresholdValue, ratioValue }) {
   if (newEnabled) {
     const nodes = setGain(gainValue, thresholdValue, ratioValue);

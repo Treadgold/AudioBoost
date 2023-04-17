@@ -20,8 +20,27 @@ browser.tabs.executeScript({
 
 updateStatusIndicator(false);
 
-function drawMeter(ctx, value) {
+
+function drawMeter(ctx, value, thresholdValue) {
+  const marks = [
+    { db: 0, pos: 1 },
+    { db: -6, pos: 0.75 },
+    { db: -12, pos: 0.5 },
+    { db: -24, pos: 0.25 },
+  ];
+
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+  // Draw value marks
+  ctx.strokeStyle = "gray";
+  ctx.lineWidth = 1;
+  for (const mark of marks) {
+    const x = ctx.canvas.width * mark.pos;
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, ctx.canvas.height);
+    ctx.stroke();
+  }
 
   if (value < 0.7) {
     ctx.fillStyle = "green";
@@ -32,17 +51,41 @@ function drawMeter(ctx, value) {
   }
 
   ctx.fillRect(0, 0, ctx.canvas.width * value, ctx.canvas.height);
+
+  // Draw threshold line
+  const thresholdPos = 1 - (thresholdValue / -100);
+  const thresholdX = ctx.canvas.width * thresholdPos;
+  ctx.strokeStyle = "orange";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(thresholdX, 0);
+  ctx.lineTo(thresholdX, ctx.canvas.height);
+  ctx.stroke();
 }
 
 browser.runtime.onMessage.addListener((message) => {
   if (message.type === "updateVUMeters") {
     const leftCtx = leftChannelMeter.getContext("2d");
     const rightCtx = rightChannelMeter.getContext("2d");
-    drawMeter(leftCtx, message.leftValue);
-    drawMeter(rightCtx, message.rightValue);
+    const thresholdValue = parseFloat(thresholdSlider.value);
+    drawMeter(leftCtx, message.leftValue, thresholdValue);
+    drawMeter(rightCtx, message.rightValue, thresholdValue);
   }
 });
 
+// Update the gain value on slider change
+// Update values on slider change
+
+gainSlider.addEventListener("input", updateValues);
+thresholdSlider.addEventListener("input", () => {
+  updateValues();
+  const leftCtx = leftChannelMeter.getContext("2d");
+  const rightCtx = rightChannelMeter.getContext("2d");
+  const thresholdValue = parseFloat(thresholdSlider.value);
+  drawMeter(leftCtx, leftCtx.canvas.width / 200, thresholdValue);
+  drawMeter(rightCtx, rightCtx.canvas.width / 200, thresholdValue);
+});
+ratioSlider.addEventListener("input", updateValues);
 
 // Load the stored gain value
 browser.storage.local.get(["gainValue", "thresholdValue", "ratioValue", "enabled"]).then((result) => {
@@ -85,6 +128,7 @@ function updateStatusIndicator(isEnabled) {
 
 // Update the gain value on slider change
 // Update values on slider change
+
 gainSlider.addEventListener("input", updateValues);
 thresholdSlider.addEventListener("input", updateValues);
 ratioSlider.addEventListener("input", updateValues);

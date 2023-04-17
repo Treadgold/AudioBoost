@@ -4,9 +4,13 @@
     <meta charset="utf-8">
     <title>AudioBoost</title>
     <style>
+      h3 {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
       body {
         width: 200px;
-        padding: 10px;
+        padding: 0px;
+        line-height: 1em;
       }
       #status-indicator {
         display: inline-block;
@@ -21,7 +25,7 @@
     <canvas id="left-channel-meter" width="200" height="20"></canvas>
     <canvas id="right-channel-meter" width="200" height="20"></canvas>
     <h3>Gain Value: <span id="gain-value">10</span></h3>
-    <input type="range" id="gain-slider" min="0" max="50" step="1" value="10">
+    <input type="range" id="gain-slider" min="1" max="50" step="1" value="10">
     <h3>Threshold: <span id="threshold-value">-50</span></h3>
     <input type="range" id="threshold-slider" min="-100" max="0" step="1" value="-30">
     <h3>Ratio: <span id="ratio-value">10</span></h3>
