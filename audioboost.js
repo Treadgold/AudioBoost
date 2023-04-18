@@ -80,6 +80,7 @@ function toggleEnabled(newEnabled, { gainValue, thresholdValue, ratioValue }) {
     storedValues = { gainValue, thresholdValue, ratioValue };
     window.__source.disconnect();
     window.__source.connect(window.__ac.destination);
+    
   }
   // Keep the analyser connected
   window.__source.connect(analyserGain).connect(analyser);
