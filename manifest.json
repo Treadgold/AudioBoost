@@ -5,7 +5,7 @@
   "version": "0.3",
   "icons": {
     "48": "icons/audioboost-disabled.png",
-    "96": "icons/audioboost-disabled.png"
+    "96": "icons/audioboost@2x-disabled.png"
   },
   "background": {
     "scripts": ["audioboost.js"]
