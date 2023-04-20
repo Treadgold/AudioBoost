@@ -32,18 +32,6 @@ For a subtle effect, set the ratio to a low setting like 2 or 3.
 
 ### Install Instruction
 
-If you would like to run this plugin, clone the contents to a directory on your machine.
+Go to the link below and add the extension to your browser.
 
-To install an extension temporarily:
-
-    open Firefox
-    enter "about:debugging" in the URL bar
-    click "This Firefox"
-    click "Load Temporary Add-on"
-    open the extension's directory and select any file inside the extension,
-    or select the packaged extension (.zip file).
-
-The extension installs and remains installed until you remove it or restart Firefox.
-
-I am working on submitting this plugin to the Mozilla Extension Library so hopefully I
-will add a link soon to add the plugin without this temp workaround.
+https://addons.mozilla.org/en-US/firefox/addon/audioboost/
